@@ -1,0 +1,20 @@
+Test Accuracy: 0.75
+
+Classification Report:
+                precision    recall  f1-score   support
+
+  perfect_shot       0.00      0.00      0.00         1
+       ok_shot       1.00      1.00      1.00         1
+      bad_shot       0.50      1.00      0.67         1
+unrecognizable       1.00      1.00      1.00         1
+
+      accuracy                           0.75         4
+     macro avg       0.62      0.75      0.67         4
+  weighted avg       0.62      0.75      0.67         4
+
+
+Confusion Matrix:
+[[0 0 1 0]
+ [0 1 0 0]
+ [0 0 1 0]
+ [0 0 0 1]]
