@@ -1,4 +1,4 @@
-#! C:\Users\samue\OneDrive\Documents\Programming\Projects\sign_language_detection\signenv\Scripts\pip.exe
+ #! C:\Users\samue\OneDrive\Documents\Programming\Projects\sign_language_detection\signenv\Scripts\pip.exe
 
 import numpy as np
 import os
