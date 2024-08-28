@@ -8,7 +8,6 @@ to iterate through each frame and run object detection.
 """
 
 
-#import statements
 import os
 import cv2
 import numpy as np
@@ -20,11 +19,10 @@ from tensorflow.keras.layers import Layer
 
 actions = np.array(['perfect_shot', 'ok_shot', 'bad_shot', 'unrecognizable'])
 
-#defining out the specific video we want to process
-video_path = r'C:\Users\samue\OneDrive\Documents\Programming\Projects\footy_ai\ai_components\raw_video\unrecognizable\IMG_1822.MOV'
+#defining out the specific video I want to process
+video_path = r'C:\Users\samue\OneDrive\Documents\Programming\Projects\footy_ai\ai_components\raw_video\ok_shot\IMG_1785.MOV'
 
 
-#defining the models we need
 mp_holistic = mp.solutions.holistic
 mp_pose = mp.solutions.pose
 
@@ -44,7 +42,7 @@ def standardize_frames(frames, target_frame_count):
 
 
 """
-Goal of next section is to be able to create functions
+Goal section is to be able to create functions
 that can be used to generate numpy arrays for the given video
 that can be used as inputs to the CNN
 """
@@ -58,7 +56,6 @@ def mediapipe_detection(image, model):
     image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)  
     return results
 
-#function to turn keypints in each frame into numpy arrays
 def extract_form_keypoints(results):
     pose = np.array([[res.x, res.y, res.z, res.visibility] for res in results.pose_landmarks.landmark]).flatten() if results.pose_landmarks else np.zeros(33*4)
 
@@ -79,7 +76,7 @@ def extract_form_keypoints(results):
     left_leg = np.array(left_leg).flatten()
     right_leg = np.array(right_leg).flatten()
 
-    # Concatenate all keypoints into a single numpy array
+    # Concatenate
     keypoints = np.concatenate([pose, left_leg, right_leg])
 
     return keypoints
@@ -154,7 +151,6 @@ if numpy_array.shape[1] != 158:
     padding = np.zeros((numpy_array.shape[0], 158 - numpy_array.shape[1]))
     numpy_array = np.concatenate([numpy_array, padding], axis=1)
 
-# Reshape if necessary
 if numpy_array.shape != (1, 90, 158):
     numpy_array = numpy_array.reshape(1, 90, 158)
 
@@ -164,7 +160,7 @@ predicted_index = np.argmax(prediction)
 
 predicted_label = actions[predicted_index]
 
-#Code to write out result to seperate file
+#Code to write out result 
 with open('footy-ai-analysis-result.txt', 'w') as file:
     file.write(f"The result of your video was {predicted_label}")
 

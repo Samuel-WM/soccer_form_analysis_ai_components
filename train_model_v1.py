@@ -1,4 +1,10 @@
- #! C:\Users\samue\OneDrive\Documents\Programming\Projects\sign_language_detection\signenv\Scripts\pip.exe
+"""
+File splits labeled data into a a training and testing
+data set for future evalution of the model. Data points in the
+training set is then passed into the defined model which is trained
+on a specified epoch value
+"""
+
 
 import numpy as np
 import os
@@ -15,16 +21,12 @@ no_sequences = 4
 
 sequence_length = 90
 
-# Path for exported data, numpy arrays
 DATA_PATH = os.path.join('SHOOTING_DATA')
 
-# Label mapping
 label_map = {label: num for num, label in enumerate(actions)}
 
-# Initialize sequences and labels
 sequences, labels = [], []
 
-# Iterate through each action, sequence, and frame
 for action in actions:
 
     for sequence in range(no_sequences):
@@ -41,8 +43,7 @@ for action in actions:
             sequences.append(window)
             labels.append(label_map[action])
 
-# Convert to numpy arrays
-# Convert to numpy arrays
+
 X = np.array(sequences)
 print("Size of X:", X.shape)
 y = to_categorical(labels).astype(int)
@@ -52,11 +53,9 @@ print("Size of y:", y.shape)
 # Split the data into training and testing sets
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25)
 
-# Save the test data
 np.save('X_test.npy', X_test)
 np.save('y_test.npy', y_test)
 
-# TensorBoard callback for logging
 log_dir = os.path.join('Logs')
 tb_callback = TensorBoard(log_dir=log_dir)
 
@@ -77,10 +76,8 @@ model.compile(optimizer='Adam', loss='categorical_crossentropy', metrics=['categ
 
 #reduces learning rate by .2 if validation loss doesnt improve after 10 epochs
 reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.2, patience=10, min_lr=0.00001)
-# Train the model
 model.fit(X_train, y_train, epochs=500, callbacks=[tb_callback, reduce_lr])
 
-#save model 
 model.save('shooting_form_v1.h5')
 
 # Display the model summary

@@ -7,20 +7,15 @@ from tensorflow.keras.layers import LSTM, Dense, Dropout, Bidirectional, Layer
 from tensorflow.keras.callbacks import TensorBoard, ReduceLROnPlateau
 import tensorflow as tf
 
-# Actions that we try to detect
 actions = np.array(['perfect_shot', 'ok_shot', 'bad_shot', 'unrecognizable'])
 
-# Number of sequences and sequence length
 no_sequences = 4
 sequence_length = 90
 
-# Path for exported data, numpy arrays
 DATA_PATH = os.path.join('SHOOTING_DATA')
 
-# Label mapping
 label_map = {label: num for num, label in enumerate(actions)}
 
-# Initialize sequences and labels
 sequences, labels = [], []
 
 # Load data
@@ -39,14 +34,11 @@ for action in actions:
             sequences.append(window)
             labels.append(label_map[action])
 
-# Convert to numpy arrays
 X = np.array(sequences)
 y = to_categorical(labels).astype(int)
 
-# Ensure stratification of the data
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, stratify=labels)
 
-# Save the test data
 np.save('X_test_v2.npy', X_test)
 np.save('y_test_v2.npy', y_test)
 
@@ -54,7 +46,7 @@ np.save('y_test_v2.npy', y_test)
 log_dir = os.path.join('Logs')
 tb_callback = TensorBoard(log_dir=log_dir)
 
-# Custom Attention Layer
+# Attention Layer
 class AttentionLayer(Layer):
     def __init__(self, **kwargs):
         super(AttentionLayer, self).__init__(**kwargs)
@@ -91,7 +83,6 @@ model = build_model()
 # Model summary
 model.summary()
 
-# Reduce learning rate if validation loss doesn't improve after 10 epochs
 reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.2, patience=10, min_lr=0.00001)
 
 # Train the model

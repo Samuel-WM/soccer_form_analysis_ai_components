@@ -1,5 +1,5 @@
 """
-Objective of given inputed file of video footage have 
+Objective: Using collected video footage have 
 code break down each frame into its key points and then
 have these then returned into usable numpy arrays for h5 file
 """
@@ -9,12 +9,12 @@ import numpy as np
 import mediapipe as mp
 from ultralytics import YOLO
 
-# Initialize MediaPipe and YOLO models
+# Initialize models
 mp_holistic = mp.solutions.holistic
 mp_pose = mp.solutions.pose
 yolo_model = YOLO('yolov8l.pt')
 
-# Detect keypoints using MediaPipe
+# Detect keypoints+
 def mediapipe_detection(image, model):
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB) 
     image.flags.writeable = False                   
@@ -23,14 +23,11 @@ def mediapipe_detection(image, model):
     image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)  
     return results
 
-# Detect objects using YOLO
 def yolo_detection(image):
     results = yolo_model(image)
     return results
 
-# Extract keypoints from MediaPipe results
 def extract_numpy_keypoints(results):
-    # Extract pose landmarks
     pose = np.array([[res.x, res.y, res.z, res.visibility] for res in results.pose_landmarks.landmark]).flatten() if results.pose_landmarks else np.zeros(33*4)
 
     left_leg = [
@@ -50,16 +47,14 @@ def extract_numpy_keypoints(results):
     left_leg = np.array(left_leg).flatten()
     right_leg = np.array(right_leg).flatten()
 
-    # Concatenate all keypoints into a single numpy array
+    # Concatenate 
     keypoints = np.concatenate([pose, left_leg, right_leg])
 
     return keypoints
 
-# Extract ball keypoints from YOLO results
 def extract_ball_keypoints(results):
     ball_keypoints = []
     for result in results:
-        # Ensure the result contains bounding boxes and class IDs
         if 'boxes' in result and 'class_ids' in result:
             boxes = result['boxes']
             class_ids = result['class_ids']
@@ -108,7 +103,6 @@ def process_video(video_path, action, video_idx):
         frames = standardize_frames(frames, frame_per_video)
 
         for frame_idx, frame in enumerate(frames):
-            # Save keypoints
             npy_path = os.path.join(DATA_PATH, action, str(video_idx), f"{frame_idx}.npy")
             np.save(npy_path, frame)
 
@@ -124,7 +118,6 @@ def standardize_frames(frames, target_frame_count):
         frames = frames[:target_frame_count]
     return frames
 
-# Main loop to process videos
 video_directory = r'C:\Users\samue\OneDrive\Documents\Programming\Projects\footy_ai\raw_video'
 
 for action in actions:

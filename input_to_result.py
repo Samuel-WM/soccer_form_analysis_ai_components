@@ -1,4 +1,12 @@
-#import statements
+"""
+This file can take any video path provided and as long as 
+the user has access to the trained model they can process the
+video and recieve a prediction. This iteration will take longer
+as the YOLOv8 object detection has to process each frame
+which slows down the run time of the program signifiantly
+"""
+
+
 import os
 import cv2
 import numpy as np
